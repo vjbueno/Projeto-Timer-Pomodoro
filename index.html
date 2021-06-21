@@ -2,10 +2,9 @@
 <!-- 
 
 Lembretes: 
-- corrigir bug do ícones que estão a esquerda do menu;
-- corrigir bug dos formulários que não estão centralizados;
-- verificar motivo pelo qual os campos dos formulários não estão identificandos seus nomes
-superiores. 
+- corrigir bug do ícones play e pause que estão a esquerda do menu;
+- verificar motivo pelo qual o botão "iniciar timer" não está centralizado/ na mesma dimensão do container
+
 
  -->
 <html lang="pt-br">
@@ -32,13 +31,13 @@ superiores.
 
     </head>
 
-
+    <!-- fundo da página definido utilizando class bg-dark do bootstrap: -->
     <body class="bg-dark">
-        <!-- fundo da página, definido utilizando class bg-dark do bootstrap -->
+        
         <!-- icomment: Menu superior da página. Utilizando bibliotecas do bootstrap -->
         <nav class="navbar navbar-expand-lg navbar-light bg-danger">
 
-            <!--Estilo do nome Timer Pomodoro e defindo que ao clicar nele o us uário volra home pag -->
+            <!--Estilo do nome Timer Pomodoro e defindo que ao clicar nele o usuário volta para home pag -->
             <a class="navbar-brand font-weight text-white" href="index.html">Timer Pomodoro</a>
 
             <!-- Configurações dos ícones pause e play  -->
@@ -46,14 +45,16 @@ superiores.
 
                 <a>
                     <!-- Ícone pause -->
-                    <i class="fa fa-pause text-white" style="font-size: 25pt" aria-hidden="true" aria-hidden="true"></i>
+                    <i id="pause" class="fa fa-pause text-white" style="font-size: 25pt; display: none" 
+                    aria-hidden="true"></i>
 
                     <!-- icone play -->
-                    <i class="fa fa-play text-white" style="font-size: 25pt" aria-hidden="true" aria-hidden="true"></i>
+                    <i id="play" class="fa fa-play text-white" style="font-size: 25pt; display: none"
+                     aria-hidden="true"></i>
                 </a>
 
                 <!-- instanciando aúdio que será reproduzido ao usuário clicar em um dos ícones -->
-                <audio src="./audio/lo-fi.mp3" type="audio/mpeg"></audio>
+                <audio id="lofi" src="./audio/lo-fi.mp3" type="audio/mpeg"></audio>
 
             </div>
 
@@ -61,26 +62,33 @@ superiores.
         <!-- fcomment: Menu superior da página. Utilizando bibliotecas do bootstrap  -->
 
 
-        <!-- icomment Container -->
+        <!-- icomment Container (campos que o usuário irá inserir o tempo) -->
         <div class="container">
 
-            <div class="row d-flex justify-context-center">
+            <!-- icomment Config -->
+
+            <div class="row d-flex justify-content-center mt-5 mb-5">
 
                 <div class="col-md-8">
 
-                    <!-- icomment Config -->
+                    
 
-                    <div id="config" class="row d-flex justify-context-center">
+                    <div id="config" class="row d-flex justify-content-center">
 
                         <div class="col">
 
-                            <div class="row d-flex justify-context-center">
+                            <!-- icomment Inputs (entrada dos números digitados pelo usuário.)-->
+
+                            <div class="row d-flex justify-content-center">
                                 
                                 <div class="col-md-3">
 
                                     <div class="form-group">
-                                        <label for="acao">Ação</label>
-                                        <input type="number" class="form-control" id="acao">
+
+                                        <label class = "d-flex justify-content-center text-white font-weight-bold"for="acao">Ação</label>
+                                        <input type="number" class="form-control form-control-lg bg-white border-0 shadow text-dark" id="acao">
+                                        <small class="text-danger" id="erro_acao" ></small>
+
                                     </div>
 
                                 </div>
@@ -88,8 +96,11 @@ superiores.
                                 <div class="col-md-3">
 
                                     <div class="form-group">
-                                        <label for="pausa">Pausa</label>
-                                        <input type="number" class="form-control" id="pausa">
+
+                                        <label class = "d-flex justify-content-center text-white font-weight-bold" for="pausa">Pausa</label>
+                                        <input type="number" class="form-control form-control-lg bg-white border-0 shadow text-dark" id="pausa">
+                                        <small class="text-danger" id="erro_pausa" ></small>
+
                                     </div>
 
                                 </div>
@@ -97,23 +108,88 @@ superiores.
                                 <div class="col-md-3">
 
                                     <div class="form-group">
-                                        <label for="sessoes">Sessões</label>
-                                        <input type="number" class="form-control"id="sessoes">
+
+                                        <label class = "d-flex justify-content-center text-white font-weight-bold" for="sessoes">Sessões</label>
+                                        <input type="number" class="form-control form-control-lg bg-white border-0 shadow text-dark" id="sessoes">
+                                        <small class="text-danger" id="erro_sessoes" ></small>
+
                                     </div>
 
                                 </div>
 
                             </div>
+                             <!-- fcomment Inputs (entrada dos números digitados pelo usuário.)- -->
+
+                                <!-- inicio configurações Botão iniciar time -->
+                                <div class="row mt-5 mb-5 d-flex justify-content-center">
+
+                                    <div class="col-md-9">
+                                        <button onclick="iniciar()" class="btn btn-danger shadow btn-lg btn-block">Iniciar timer</button>
+                                    </div>
+
+
+
+                                </div>
+                                <!-- fim configurações Botão iniciar time -->
 
                         </div>
 
                     </div>
 
-                    <!-- fcomment Config -->
+                   
 
                 </div>
 
             </div>
+             <!-- fcomment Config -->
+
+                <!-- icomment configurações Timer(contador do tempo) -->
+                 <div id="timer" class="mt-0 d-flex justify-content-center" style="display: none;"> 
+
+                    <div class="row mb-3">
+                        <div class="col">
+                           <h3 id="title" class="text-center"></h3> 
+                        </div>
+
+                    </div>
+
+                    <div class="row shadow time">
+                        <div class="col-5 p-0">
+                            <h2 id="minutes_ok"></h2>
+                        </div>
+
+                        <div class="col-1 p-0 d-flex justify-content-center">
+                            <h2>:</h2>
+                        </div>
+                        <div class="col-5 pl-0">
+                            <h2 id="seconds_ok" ></h2>
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col">
+                           <h3 id="title_sessao" class="text-center text-secondary"></h3> 
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- fcomment configurações Timer (contador do tempo) -->
+                
+                <!-- icomment configuração Finalização -->
+                <div id=fim style="display: none;">
+
+                    <h1 class="text-sucess text-center">Parabéns! Você finalizou suas tarefas</h1>
+                    <div class="row mt-5 mb-5 d-flex justify-contente-center">
+                        <div class="col-md-9 d-flex justify-content-center">
+                            <a href="./index.html" class="btn btn-danger shadow btn-lg">Início</a>
+                        </div>
+
+                    </div>
+                    
+                </div>
+                 <!-- fcomment configuração Finalização -->
 
         </div>
         <!-- fcomment Container -->
