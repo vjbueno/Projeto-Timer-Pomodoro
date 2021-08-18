@@ -1,2 +1,2 @@
 # Projeto-Timer-Pomodoro
-Projeto Timer Pomodoro desenvolvido com tutorial do yt do professor Thiago Lima
+Projeto Timer Pomodoro desenvolvido com suporte das vídeoaulas do canal do professor Thiago Lima
